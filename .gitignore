@@ -1,0 +1,23 @@
+### Compiled files
+*.class
+*.dll
+*.apk
+*.ap_
+
+### Compressed files
+*.7z
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+### OS-generated files
+.DS_Store*
+Thumbs.db
+.directory
+
+### Folders etc.
+bin/
+build/

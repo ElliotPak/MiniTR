@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MiniTR" basedir="." default="clean-build">
+    <property name="src.dir"       value="src"/>
+    <property name="dist.dir"      value="dist"/>
+    <property name="main-class"    value="MiniTRKt"/>
+    <property name="kotlin.lib"    value="/opt/kotlinc/lib"/>
+
+    <typedef resource="org/jetbrains/kotlin/ant/antlib.xml" classpath="${kotlin.lib}/kotlin-ant.jar"/>
+    
+    <target name="clean">
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="build">
+        <mkdir dir="${dist.dir}"/>
+        <kotlinc output="${dist.dir}/${ant.project.name}.jar">
+            <src path="${src.dir}"/>
+        </kotlinc>
+    </target>
+
+    <target name="run" depends="build">
+        <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <target name="run-nobuild">
+        <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <target name="clean-build" depends="clean,build"/>
+</project>
