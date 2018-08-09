@@ -1,6 +1,7 @@
 /**
  * Name: Data.kt
  * Contains various data classes.
+ * @author Elliot Pak
  */
 
 package minitr.model
@@ -8,25 +9,25 @@ package minitr.model
 /**
  * Contains the settings of a minitr project.
  */
-data class Settings(val name: String, val root: String,
-                    val tmuxCommand: String, val tmuxFlags: String,
-                    val startWindow: String)
+data class Settings(var name: String, var root: String,
+                    var tmuxCommand: String, var tmuxFlags: String,
+                    var startWindow: String, var windows: Array<String>)
 
 /**
  * Contains the commands executed at various points of a minitr project.
  */
-data class Commands(val start: Array<String>, val attach: Array<String>,
-                    val detatch: Array<String>, val stop: Array<String>,
-                    val preWindow: Array<String>)
+data class Commands(var start: Array<String>, var attach: Array<String>,
+                    var detatch: Array<String>, var stop: Array<String>,
+                    var preWindow: Array<String>)
 
 /**
  * Contains information about a tmux window
  */
-data class Window(val name: String, val layout: String = "",
-                  val panes: Array<String>)
+data class Window(var name: String, var layout: String,
+                  var panes: Array<String>)
 
 /**
  * Contains all information about a minitr project
  */
 data class Project(val settings: Settings, val commands: Commands,
-                   val windows: Array<Window>)
+                   val windows: List<Window>)

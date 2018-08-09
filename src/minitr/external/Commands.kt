@@ -1,25 +1,9 @@
-/**
- * Name: ExternalInteract.kt
- * Contains functions for interacting with things external to the program,
- * such as files and commands.
- * @author Elliot Pak
- */
-
 package minitr.external
 
+import minitr.model.*
 import java.lang.ProcessBuilder.Redirect
 import java.util.concurrent.TimeUnit
-
-/**
- * Gets the contents of a file.
- * @param filename the name of the file
- * @return the contents of the file
- */
-fun getFileContents(filename: String): String {
-    val bufferedReader: BufferedReader = File(filename).bufferedReader()
-    val inputString = bufferedReader.use {it.readText()}
-    return inputString
-}
+import java.io.File
 
 /**
  * Executes an interactive command in the specified working directory,
@@ -41,7 +25,7 @@ fun String.runCommandInteractive(workingDir: File? = null) {
  * @param workingDir The working directory to execute the command in
  * @return A Pair containing the contents of stdout and stderr
  */
-fun String.runCommand(workingDir: File? = null): Pairr<String, String> {
+fun String.runCommand(workingDir: File? = null): Pair<String, String> {
     val process = ProcessBuilder(*split(" ").toTypedArray())
             .directory(workingDir)
             .redirectOutput(Redirect.INHERIT)
