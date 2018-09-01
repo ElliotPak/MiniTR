@@ -4,5 +4,6 @@ import minitr.external.*
 
 fun main(args: Array<String>) {
     val cont = getFileContents(".minitr")
-    println(parseProjectFile(cont))
+    val command = buildExecuteCommand(parseProjectFile(cont).settings, "some kinda test")
+    command.runCommand()
 }
