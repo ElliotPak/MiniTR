@@ -11,7 +11,7 @@ package minitr.model
  */
 data class Settings(var name: String, var root: String,
                     var tmuxCommand: String, var tmuxFlags: String,
-                    var startWindow: String, var windows: Array<String>)
+                    var startWindow: String)
 
 /**
  * Contains the commands executed at various points of a minitr project.

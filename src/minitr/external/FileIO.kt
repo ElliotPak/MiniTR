@@ -27,7 +27,7 @@ fun getFileContents(filename: String): String {
  */
 
 fun parseProjectFile(contents: String): Project {
-    var settings = Settings("", ".", "tmux", "", "", arrayOf())
+    var settings = Settings("", ".", "tmux", "", "")
     var commands = Commands(arrayOf(), arrayOf(), arrayOf(), arrayOf(), arrayOf())
     val windows: MutableList<Window> = mutableListOf()
     val windowsRead: List<Window> = windows
@@ -48,12 +48,12 @@ fun parseProjectFile(contents: String): Project {
             }
         }
     }
-    
+
     return Project(settings, commands, windowsRead)
 }
 
 fun parseSettings(input: String): Settings {
-    var settings = Settings("", ".", "tmux", "", "", arrayOf())
+    var settings = Settings("", ".", "tmux", "", "")
 
     for (l in input.split("\n")) {
         val (key, value) = parseConfigLine(l)
@@ -62,7 +62,6 @@ fun parseSettings(input: String): Settings {
         if (key == "tmux-command") settings.tmuxCommand = value
         if (key == "tmux-flags") settings.tmuxFlags = value
         if (key == "start-window") settings.startWindow = value
-        if (key == "windows") settings.windows = parseQuoteList(value)
     }
 
     return settings

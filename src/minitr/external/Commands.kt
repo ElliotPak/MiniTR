@@ -1,9 +1,9 @@
 package minitr.external
 
-import minitr.model.*
 import java.lang.ProcessBuilder.Redirect
 import java.util.concurrent.TimeUnit
 import java.io.File
+import minitr.model.*
 
 /**
  * Executes an interactive command in the specified working directory,
@@ -70,10 +70,10 @@ fun buildAttachCommand(settings: Settings): String {
 
 fun buildNewWindowCommand(settings: Settings, window: Window): String {
     var command = "${settings.tmuxCommand} new-window"
-    command += " -n ${window.name}"
     if (settings.startWindow != window.name) {
-        command += "-d"
+        command += " -d"
     }
+    command += " -n ${window.name}"
     return command
 }
 
