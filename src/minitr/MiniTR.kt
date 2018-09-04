@@ -5,30 +5,38 @@ import minitr.model.Project
 
 fun main(args: Array<String>) {
     if (args.size == 1) {
-        val cont = getFileContents(".minitr")
-        val project = parseProjectFile(cont)
-        executeProjectAction(project, args[0]);
+        executeProjectAction(".minitr", args[0]);
     }
     else if (args.size == 2) {
-        val cont = getFileContents("~/.config/minitr/${args[0]}.minitr")
-        val project = parseProjectFile(cont)
-        executeProjectAction(project, args[1]);
+        executeProjectAction("~/.config/minitr/${args[1]}.minitr", args[0]);
     }
     else {
         println("Please enter two arguments")
     }
 }
 
-fun executeProjectAction(project: Project, action: String) {
-    val options: MutableMap<String, (Project) -> String?> = HashMap()
-    options.put("start", ::projectStart)
-    options.put("start-bg", ::projectCreate)
-    options.put("attach", ::projectAttach)
-    options.put("debug", ::projectDebug)
-    val actionFunc: ((Project) -> String?)? = options.get(action)
-    if (actionFunc != null) {
-        val results = actionFunc(project)
+fun executeProjectAction(projectStr: String, action: String) {
+    val optionsNew: MutableMap<String, (String) -> Unit> = HashMap()
+    optionsNew.put("new", ::projectNew)
+    optionsNew.put("new-local", ::projectNewLocal)
+    val actionNewFunc = optionsNew.get(action)
+    if (actionNewFunc != null) {
+        val results = actionNewFunc(projectStr)
         println(results)
+    }
+    else {
+        val optionsStart: MutableMap<String, (Project) -> String?> = HashMap()
+        optionsStart.put("start", ::projectStart)
+        optionsStart.put("start-bg", ::projectCreate)
+        optionsStart.put("attach", ::projectAttach)
+        optionsStart.put("debug", ::projectDebug)
+        val cont = getFileContents(projectStr)
+        val project = parseProjectFile(cont)
+        val actionFunc = optionsStart.get(action)
+        if (actionFunc != null) {
+            val results = actionFunc(project)
+            println(results)
+        }
     }
 }
 
@@ -57,9 +65,31 @@ fun setupMinitrProject(project: Project, debug: Boolean = false): String? {
     val settings = project.settings
     results += executeSetupCommand(buildStartCommand(settings), debug)
     for (window in project.windows) {
-        results += executeSetupCommand(buildNewWindowCommand(settings, window), debug)
+        if (window == project.windows.first()) {
+            results += executeSetupCommand(buildWindowRenameCommand(settings, window), debug)
+        }
+        else {
+            results += executeSetupCommand(buildNewWindowCommand(settings, window), debug)
+        }
+        for (pane in window.panes) {
+            results += executeSetupCommand(buildExecuteCommand(settings, pane), debug)
+            if (pane != window.panes.last()) {
+                results += executeSetupCommand(buildSplitCommand(settings), debug)
+            }
+        }
+        if (window.layout != "") {
+            results += executeSetupCommand(buildLayoutCommand(settings, window.layout), debug)
+        }
     }
     return results
+}
+
+fun projectNew(projectName: String): Unit {
+    saveFile("~/.config/minitr/$projectName.minitr", createProjectSkeleton(projectName))
+}
+
+fun projectNewLocal(projectName: String): Unit {
+    saveFile(".minitr", createProjectSkeleton(projectName))
 }
 
 fun executeSetupCommand(command: String, debug: Boolean = false): String? {

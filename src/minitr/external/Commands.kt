@@ -37,6 +37,9 @@ fun String.runCommand(workingDir: File? = null): Pair<String, String> {
      return Pair(processOut, processErr)
 }
 
+/**
+ * Converts a string into a list suitable for ProcessBuilder
+ */
 fun String.getCommandArray(): List<String> {
     val commandsOld = this.split(Regex("(?<!\\\\) "))
 
@@ -69,24 +72,26 @@ fun buildAttachCommand(settings: Settings): String {
 }
 
 fun buildNewWindowCommand(settings: Settings, window: Window): String {
-    var command = "${settings.tmuxCommand} new-window"
-    if (settings.startWindow != window.name) {
-        command += " -d"
-    }
-    command += " -n ${window.name}"
+    var command = "${settings.tmuxCommand} new-window -n ${window.name}"
+    return command
+}
+
+fun buildWindowRenameCommand(settings: Settings, window: Window): String {
+    var command = "${settings.tmuxCommand} rename-window ${window.name}"
+    return command
+}
+
+fun buildSplitCommand(settings: Settings): String {
+    var command = "${settings.tmuxCommand} split-window"
+    return command
+}
+
+fun buildLayoutCommand(settings: Settings, layout: String): String {
+    var command = "${settings.tmuxCommand} select-layout $layout"
     return command
 }
 
 fun buildExecuteCommand(settings: Settings, toExecute: String): String {
-    var command = "${settings.tmuxCommand} send-keys -l"
-    for (char in toExecute) {
-        if (char == ' ') {
-            command += """ \ """
-        }
-        else {
-            command += " $char"
-        }
-    }
-    command += "\n"
+    var command = "${settings.tmuxCommand} send-keys $toExecute\n"
     return command
 }

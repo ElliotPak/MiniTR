@@ -22,6 +22,37 @@ fun getFileContents(filename: String): String {
 }
 
 /**
+ * Returns true if the specified file exists.
+ */
+fun doesFileExist(filename: String): Boolean {
+    val file: File = File(filename)
+    return file.isFile()
+}
+
+/**
+ * Creates a string for a basic project file.
+ */
+fun createProjectSkeleton(projectName: String): String {
+    return """[settings]
+    name = $projectName
+    root = .
+    tmux-command = tmux
+    tmux-flags = 
+    start-window = default
+
+    [window/default]
+    panes = ""
+    """
+}
+
+/**
+ * Saves file contents to specified file.
+ */
+fun saveFile(filename: String, contents: String) {
+    //stubbed for now
+}
+
+/**
  * Parses project file contents and returns a Project object.
  * @return A Project representing the current minitr project
  */
@@ -107,5 +138,10 @@ fun parseConfigLine(line: String): Pair<String, String> {
 }
 
 fun parseQuoteList(value: String): Array<String> {
-    return value.split("\\s*\"\\s*").toTypedArray()
+    val split = value.split(Regex("\\s*\"\\s*"))
+    return split.filter(::isNonEmptyString).toTypedArray()
+}
+
+fun isNonEmptyString(check: String): Boolean {
+    return (check.trim() != "")
 }
