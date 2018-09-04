@@ -9,6 +9,7 @@
     
     <target name="clean">
         <delete dir="${dist.dir}"/>
+        <delete file="minitr"/>
     </target>
 
     <target name="build">
@@ -16,6 +17,10 @@
         <kotlinc output="${dist.dir}/${ant.project.name}.jar">
             <src path="${src.dir}"/>
         </kotlinc>
+        <echo file="minitr" append="false">#\!usr/bin/env sh
+            java -jar ${dist.dir}/${ant.project.name}.jar "$@"
+        </echo>
+        <chmod file="minitr" perm="700"/>
     </target>
 
     <target name="run" depends="build">
