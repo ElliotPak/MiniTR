@@ -6,11 +6,19 @@ import java.io.File
 import minitr.model.*
 
 /**
- * Executes an interactive command in the specified working directory,
+ * Executes an interactive command in the specified working directory.
  * @param workingDir The working directory to execute the command in
  */
 fun String.runCommandInteractive(workingDir: File? = null) {
-    val process = ProcessBuilder(this.getCommandArray())
+    this.getCommandArray().runCommandInteractive(workingDir)
+}
+
+/**
+ * Executes an interactive command in the specified working directory.
+ * @param workingDir The working directory to execute the command in
+ */
+fun List<String>.runCommandInteractive(workingDir: File? = null) {
+    val process = ProcessBuilder(this)
             .directory(workingDir)
             .redirectInput(Redirect.INHERIT)
             .redirectOutput(Redirect.INHERIT)
@@ -26,7 +34,17 @@ fun String.runCommandInteractive(workingDir: File? = null) {
  * @return A Pair containing the contents of stdout and stderr
  */
 fun String.runCommand(workingDir: File? = null): Pair<String, String> {
-    val process = ProcessBuilder(this.getCommandArray())
+    return this.getCommandArray().runCommand(workingDir)
+}
+
+/**
+ * Executes a non-interactive command in the specified working directory,
+ * keeping track of stdout and stderr.
+ * @param workingDir The working directory to execute the command in
+ * @return A Pair containing the contents of stdout and stderr
+ */
+fun List<String>.runCommand(workingDir: File? = null): Pair<String, String> {
+    val process = ProcessBuilder(this)
             .directory(workingDir)
             .redirectOutput(Redirect.INHERIT)
             .redirectError(Redirect.INHERIT)
@@ -58,40 +76,59 @@ fun String.getCommandArray(): List<String> {
     return commands
 }
 
-fun buildStartCommand(settings: Settings): String {
-    var command = "${settings.tmuxCommand} new-session -d"
-    command += " -c ${settings.root}"
-    command += " -s ${settings.name}"
+fun buildStartCommand(settings: Settings): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("new-session")
+    command.add("-d")
+    command.add("-c ${settings.root}")
+    command.add("-s ${settings.name}")
     return command
 }
 
-fun buildAttachCommand(settings: Settings): String {
-    var command = "${settings.tmuxCommand} attach"
-    command += " -t ${settings.name}"
+fun buildAttachCommand(settings: Settings): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("attach")
+    command.add("-t ${settings.name}")
     return command
 }
 
-fun buildNewWindowCommand(settings: Settings, window: Window): String {
-    var command = "${settings.tmuxCommand} new-window -n ${window.name}"
+fun buildNewWindowCommand(settings: Settings, window: Window): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("new-window")
+    command.add("-n ${window.name}")
     return command
 }
 
-fun buildWindowRenameCommand(settings: Settings, window: Window): String {
-    var command = "${settings.tmuxCommand} rename-window ${window.name}"
+fun buildWindowRenameCommand(settings: Settings, window: Window): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("rename-window")
+    command.add("${window.name}")
     return command
 }
 
-fun buildSplitCommand(settings: Settings): String {
-    var command = "${settings.tmuxCommand} split-window"
+fun buildSplitCommand(settings: Settings): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("split-window")
     return command
 }
 
-fun buildLayoutCommand(settings: Settings, layout: String): String {
-    var command = "${settings.tmuxCommand} select-layout $layout"
+fun buildLayoutCommand(settings: Settings, layout: String): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("select-layout")
+    command.add("$layout")
     return command
 }
 
-fun buildExecuteCommand(settings: Settings, toExecute: String): String {
-    var command = "${settings.tmuxCommand} send-keys $toExecute\n"
+fun buildExecuteCommand(settings: Settings, toExecute: String): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("send-keys")
+    command.add("$toExecute\n")
     return command
 }

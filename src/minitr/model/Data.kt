@@ -31,3 +31,23 @@ data class Window(var name: String, var layout: String,
  */
 data class Project(val settings: Settings, val commands: Commands,
                    val windows: List<Window>)
+
+/**
+ * Contains all commands that have been executed
+ */
+class CommandInfo(var shouldExecute: Boolean) {
+    val commandList: MutableList<String> = mutableListOf()
+
+    fun addCommand(command: List<String>) {
+        var toAdd = ""
+        for (cc in command) {
+            toAdd += "$cc"
+            if (cc != command.last()) toAdd += " "
+        }
+        commandList.add(toAdd)
+    }
+
+    fun getCommands(): List<String> {
+        return commandList
+    }
+}
