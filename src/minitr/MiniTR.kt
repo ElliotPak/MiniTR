@@ -1,15 +1,16 @@
 package minitr
 
+import java.io.File
 import minitr.external.*
 import minitr.model.Project
-import minitr.model.CommandInfo
+import minitr.model.CommandManager
 
 fun main(args: Array<String>) {
     if (args.size == 1) {
-        executeProjectAction(".minitr", args[0]);
+        executeProjectAction(".minitr", args[0])
     }
     else if (args.size == 2) {
-        executeProjectAction("~/.config/minitr/${args[1]}.minitr", args[0]);
+        executeProjectAction("~/.config/minitr/${args[1]}.minitr", args[0])
     }
     else {
         println("Please enter two arguments")
@@ -17,18 +18,16 @@ fun main(args: Array<String>) {
 }
 
 fun executeProjectAction(projectStr: String, action: String) {
-    val commands = CommandInfo(true)
-    val optionsNew: MutableMap<String, (String, CommandInfo) -> Unit> = HashMap()
+    val optionsNew: MutableMap<String, (String) -> Unit> = HashMap()
     optionsNew.put("new", ::projectNew)
     optionsNew.put("new-local", ::projectNewLocal)
     val actionNewFunc = optionsNew.get(action)
 
     if (actionNewFunc != null) {
-        val results = actionNewFunc(projectStr, commands)
-        println(results)
+        val results = actionNewFunc(projectStr)
     }
     else {
-        val optionsStart: MutableMap<String, (Project, CommandInfo) -> Unit> = HashMap()
+        val optionsStart: MutableMap<String, (Project) -> Unit> = HashMap()
         optionsStart.put("start", ::projectStart)
         optionsStart.put("start-bg", ::projectCreate)
         optionsStart.put("attach", ::projectAttach)
@@ -37,69 +36,67 @@ fun executeProjectAction(projectStr: String, action: String) {
         val project = parseProjectFile(cont)
         val actionFunc = optionsStart.get(action)
         if (actionFunc != null) {
-            actionFunc(project, commands)
+            actionFunc(project)
         }
     }
 }
 
-fun projectCreate(project: Project, commands: CommandInfo): Unit {
-    setupMinitrProject(project, commands)
+fun projectCreate(project: Project): Unit {
+    val cm = CommandManager()
+    setupMinitrProject(project, cm)
+    val commands = cm.getCommands()
+    for (c in commands) {
+        c.runCommand()
+    }
 }
 
-fun projectStart(project: Project, commands: CommandInfo): Unit {
-    projectCreate(project, commands)
-    projectAttach(project, commands)
+fun projectStart(project: Project): Unit {
+    projectCreate(project)
+    projectAttach(project)
 }
 
-fun projectAttach(project: Project, commands: CommandInfo): Unit  {
+fun projectAttach(project: Project): Unit  {
     val command = buildAttachCommand(project.settings)
-    commands.addCommand(command)
     command.runCommandInteractive()
 }
 
-fun projectDebug(project: Project, commands: CommandInfo): Unit {
-    commands.shouldExecute = false
-    setupMinitrProject(project, commands)
-    for (command in commands.getCommands()) {
-        println(command)
+fun projectDebug(project: Project): Unit {
+    val cm = CommandManager()
+    setupMinitrProject(project, cm)
+    val commands = cm.getCommandsAsStrings()
+    for (c in commands) {
+        println(c)
     }
 }
 
-fun setupMinitrProject(project: Project, commands: CommandInfo): Unit {
+fun setupMinitrProject(project: Project, commands: CommandManager): Unit {
     val settings = project.settings
-    executeSetupCommand(buildStartCommand(settings), commands)
+    commands.addCommand(buildStartCommand(settings))
     for (window in project.windows) {
         if (window == project.windows.first()) {
-            executeSetupCommand(buildWindowRenameCommand(settings, window), commands)
+            commands.addCommand(buildWindowRenameCommand(settings, window))
         }
         else {
-            executeSetupCommand(buildNewWindowCommand(settings, window), commands)
+            commands.addCommand(buildNewWindowCommand(settings, window))
         }
         for (pane in window.panes) {
-            executeSetupCommand(buildExecuteCommand(settings, pane), commands)
+            commands.addCommand(buildExecuteCommand(settings, pane))
             if (pane != window.panes.last()) {
-                executeSetupCommand(buildSplitCommand(settings), commands)
+                commands.addCommand(buildSplitCommand(settings))
             }
         }
         if (window.layout != "") {
-            executeSetupCommand(buildLayoutCommand(settings, window.layout), commands)
+            commands.addCommand(buildLayoutCommand(settings, window.layout))
         }
     }
 }
 
-fun projectNew(projectName: String, commands: CommandInfo): Unit {
-    saveFile("~/.config/minitr/$projectName.minitr", createProjectSkeleton(projectName, "~/.config/minitr"))
+fun projectNew(projectName: String): Unit {
+    saveFile("~/.config/minitr/$projectName.minitr",
+        createProjectSkeleton(projectName, "~/.config/minitr"))
 }
 
-fun projectNewLocal(projectName: String, commands: CommandInfo): Unit {
-    println("whoo")
+fun projectNewLocal(projectName: String): Unit {
     val userDir = System.getProperty("user.dir")
     saveFile("$userDir/.minitr", createProjectSkeleton(projectName, userDir))
-}
-
-fun executeSetupCommand(command: List<String>, commands: CommandInfo): Unit {
-    commands.addCommand(command)
-    if (commands.shouldExecute) {
-        command.runCommand()
-    }
 }
