@@ -88,11 +88,13 @@ fun setupMinitrProject(project: Project, commands: CommandInfo): Unit {
 }
 
 fun projectNew(projectName: String, commands: CommandInfo): Unit {
-    saveFile("~/.config/minitr/$projectName.minitr", createProjectSkeleton(projectName))
+    saveFile("~/.config/minitr/$projectName.minitr", createProjectSkeleton(projectName, "~/.config/minitr"))
 }
 
 fun projectNewLocal(projectName: String, commands: CommandInfo): Unit {
-    saveFile(".minitr", createProjectSkeleton(projectName))
+    println("whoo")
+    val userDir = System.getProperty("user.dir")
+    saveFile("$userDir/.minitr", createProjectSkeleton(projectName, userDir))
 }
 
 fun executeSetupCommand(command: List<String>, commands: CommandInfo): Unit {

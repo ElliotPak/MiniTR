@@ -32,24 +32,26 @@ fun doesFileExist(filename: String): Boolean {
 /**
  * Creates a string for a basic project file.
  */
-fun createProjectSkeleton(projectName: String): String {
+fun createProjectSkeleton(projectName: String, projectPath: String): String {
     return """[settings]
-    name = $projectName
-    root = .
-    tmux-command = tmux
-    tmux-flags = 
-    start-window = default
+name = $projectName
+root = $projectPath
+tmux-command = tmux
+tmux-flags = 
+start-window = default
 
-    [window/default]
-    panes = ""
-    """
+[window/default]
+panes = ""
+"""
 }
 
 /**
  * Saves file contents to specified file.
  */
 fun saveFile(filename: String, contents: String) {
-    //stubbed for now
+    File(filename).printWriter().use { out ->
+        out.write(contents)
+    }
 }
 
 /**
