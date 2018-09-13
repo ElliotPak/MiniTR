@@ -81,8 +81,10 @@ fun buildStartCommand(settings: Settings): List<String> {
     command.add("${settings.tmuxCommand}")
     command.add("new-session")
     command.add("-d")
-    command.add("-c ${settings.root}")
-    command.add("-s ${settings.name}")
+    command.add("-c")
+    command.add("${settings.root}")
+    command.add("-s")
+    command.add("${settings.name}")
     return command
 }
 
@@ -90,7 +92,8 @@ fun buildAttachCommand(settings: Settings): List<String> {
     val command: MutableList<String> = mutableListOf()
     command.add("${settings.tmuxCommand}")
     command.add("attach")
-    command.add("-t ${settings.name}")
+    command.add("-t")
+    command.add("${settings.name}")
     return command
 }
 
@@ -98,7 +101,8 @@ fun buildNewWindowCommand(settings: Settings, window: Window): List<String> {
     val command: MutableList<String> = mutableListOf()
     command.add("${settings.tmuxCommand}")
     command.add("new-window")
-    command.add("-n ${window.name}")
+    command.add("-n")
+    command.add("${window.name}")
     return command
 }
 
