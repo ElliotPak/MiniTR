@@ -17,10 +17,10 @@
         <kotlinc output="${dist.dir}/${ant.project.name}.jar">
             <src path="${src.dir}"/>
         </kotlinc>
-        <echo file="minitr" append="false">#\!usr/bin/env sh
-            java -jar ${dist.dir}/${ant.project.name}.jar "$@"
+        <echo file="${dist.dir}/minitr" append="false">#\!usr/bin/env sh
+            java -jar ${ant.project.name}.jar "$@"
         </echo>
-        <chmod file="minitr" perm="700"/>
+        <chmod file="${dist.dir}/minitr" perm="700"/>
     </target>
 
     <target name="run" depends="build">
