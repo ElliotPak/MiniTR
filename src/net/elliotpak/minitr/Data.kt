@@ -4,7 +4,7 @@
  * @author Elliot Pak
  */
 
-package minitr.model
+package net.elliotpak.minitr
 
 /**
  * Contains the settings of a minitr project.

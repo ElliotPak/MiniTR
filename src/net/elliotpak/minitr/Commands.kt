@@ -1,9 +1,8 @@
-package minitr.external
+package net.elliotpak.minitr
 
 import java.lang.ProcessBuilder.Redirect
 import java.util.concurrent.TimeUnit
 import java.io.File
-import minitr.model.*
 
 /**
  * Executes an interactive command in the specified working directory.

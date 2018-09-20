@@ -1,9 +1,6 @@
-package minitr
+package net.elliotpak.minitr
 
 import java.io.File
-import minitr.external.*
-import minitr.model.Project
-import minitr.model.CommandManager
 
 fun main(args: Array<String>) {
     if (args.size == 1) {

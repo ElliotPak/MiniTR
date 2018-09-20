@@ -1,13 +1,11 @@
 /**
- * Name: ExternalInteract.kt
- * Contains functions for interacting with things external to the program,
- * such as files and commands.
+ * Name: FileIO.kt
+ * Contains functions related to reading and writing files.
  * @author Elliot Pak
  */
 
-package minitr.external
+package net.elliotpak.minitr
 
-import minitr.model.*
 import java.io.*
 
 /**

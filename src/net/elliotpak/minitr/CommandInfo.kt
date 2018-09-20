@@ -1,7 +1,4 @@
-package minitr.model
-
-import java.io.File
-import minitr.external.*
+package net.elliotpak.minitr
 
 /**
  * Contains all commands that are to be executed
