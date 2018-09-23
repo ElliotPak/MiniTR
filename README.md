@@ -5,7 +5,41 @@ user-specified project files and creates tmux sessions based on them.
 
 Please note that this is a very early version of MiniTR. I was focused on
 getting specific input files and command line arguments to work, and I'll
-be writing test for it very soon.
+be writing tests for it very soon.
+
+## Installation Instructions
+
+Simply run `./gradlew install`. The executable script will be located in
+`~/.local/bin`, so make sure that folder exists before running. To
+uninstall, run `./gradlew uninstall`.
+
+If you just want to build MiniTR, run `./gradlew jar`. The jar can be found
+in `build/libs`.
+
+## Run Instructions
+
+After installing, you can run MiniTR with the `minitr` command.
+
+The following commands create new MiniTR project files:
+
+* `minitr new [projectname]` creates a new minitr project file with the path
+    `~/config/minitr/[projectname].minitr`.
+* `minitr new-local [projectname]` creates a new minitr project file in your
+    current directory named `.minitr`.
+
+The following commands are related to creating and attaching to MiniTR project
+files. Specifying a project name will make MiniTR read
+`~/config/minitr/[projectname].minitr`, and leaving out a project name will
+cause it to read the file `.minitr` in your local directory.
+
+* `minitr start [projectname]` creates a new tmux session based on the project
+    file and attaches to it.
+* `minitr start-bg [projectname]` creates a new tmux session based on the
+    project file without attaching.
+* `minitr attach [projectname]` attaches to the tmux session created by the
+    minitr project
+* `minitr debug [projectname]` works the same as start, except the tmux commands
+    are printed to stdout instead
 
 ## MiniTR Project Files
 
@@ -53,37 +87,3 @@ For the window blocks:
 * The name of the window is specified after the slash starting the block.
 * `layout` specifies the window's layout.
 * `panes` specifies which commands to run in each pane.
-
-## Run Instructions
-
-To run MiniTR after building, locate `dist/minitr` and run it. Eventually I'll
-add an option to create the executable script in some bin path.
-
-The following commands create new MiniTR project files:
-
-* `minitr new [projectname]` creates a new minitr project file with the path
-    `~/config/minitr/[projectname].minitr`.
-* `minitr new-local [projectname]` creates a new minitr project file in your
-    current directory named `.minitr`.
-
-The following commands are related to creating and attaching to MiniTR project
-files. Specifying a project name will make MiniTR read
-`~/config/minitr/[projectname].minitr`, and leaving out a project name will
-cause it to read the file `.minitr` in your local directory.
-
-* `minitr start [projectname]` creates a new tmux session based on the project
-    file and attaches to it.
-* `minitr start-bg [projectname]` creates a new tmux session based on the
-    project file without attaching.
-* `minitr attach [projectname]` attaches to the tmux session created by the
-    minitr project
-* `minitr debug [projectname]` works the same as start, except the tmux commands
-    are printed to stdout instead
-
-## Build Instructions
-
-Ant is required to build MiniTR. Change the value of `kotlin.lib` to wherever
-your `kotlinc/lib` folder is located.
-
-To build, run `ant build`.  
-To clean, run `ant clean`.  
