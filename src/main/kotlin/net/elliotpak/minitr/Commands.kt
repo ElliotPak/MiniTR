@@ -75,13 +75,27 @@ fun String.getCommandArray(): List<String> {
     return commands
 }
 
+/**
+ * Replaces the tilde in front of a string with the user's home.
+ *
+ * Fun fact: this took me like 2 months to solve. At the time of writing this,
+ * I just solved it, and I'm so gosh darn mad it took me this long you have no
+ * idea.
+ *
+ * Note to future Elliot: Never use a tilde anywhere outside of bash, and even
+ * then, don't do it. I'll be VERY sad.
+ */
+fun replaceTilde(tilded: String): String {
+    return tilded.replace(Regex("^~"), System.getProperty("user.home"))
+}
+
 fun buildStartCommand(settings: Settings): List<String> {
     val command: MutableList<String> = mutableListOf()
     command.add("${settings.tmuxCommand}")
     command.add("new-session")
     command.add("-d")
     command.add("-c")
-    command.add("${settings.root}")
+    command.add("${replaceTilde(settings.root)}")
     command.add("-s")
     command.add("${settings.name}")
     return command
@@ -93,15 +107,6 @@ fun buildAttachCommand(settings: Settings): List<String> {
     command.add("attach")
     command.add("-t")
     command.add("${settings.name}")
-    return command
-}
-
-fun buildDefaultDirCommand(settings: Settings): List<String> {
-    val command: MutableList<String> = mutableListOf()
-    command.add("${settings.tmuxCommand}")
-    command.add("attach")
-    command.add("-c")
-    command.add("${settings.root}")
     return command
 }
 

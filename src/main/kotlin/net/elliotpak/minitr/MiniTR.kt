@@ -71,7 +71,6 @@ fun projectDebug(project: Project): Unit {
 fun setupMinitrProject(project: Project, commands: CommandManager): Unit {
     val settings = project.settings
     commands.addCommand(buildStartCommand(settings))
-    commands.addCommand(buildDefaultDirCommand(settings))
     for (window in project.windows) {
         commands.addCommand(buildNewWindowCommand(settings, window))
         if (window == project.windows.first()) {
