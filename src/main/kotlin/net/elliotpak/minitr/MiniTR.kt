@@ -71,21 +71,21 @@ fun projectDebug(project: Project): Unit {
 fun setupMinitrProject(project: Project, commands: CommandManager): Unit {
     val settings = project.settings
     commands.addCommand(buildStartCommand(settings))
+    commands.addCommand(buildDefaultDirCommand(settings))
     for (window in project.windows) {
+        commands.addCommand(buildNewWindowCommand(settings, window))
         if (window == project.windows.first()) {
-            commands.addCommand(buildWindowRenameCommand(settings, window))
-        }
-        else {
-            commands.addCommand(buildNewWindowCommand(settings, window))
+            val windowId = "${window.name}"
+            commands.addCommand(buildKillOtherWindowsCommand(settings, windowId))
+            commands.addCommand(buildReorderWindowsCommand(settings))
         }
         for (pane in window.panes) {
             for (command in pane.commands) {
+                commands.addCommand(buildSplitCommand(settings))
                 commands.addCommand(buildExecuteCommand(settings, command))
             }
-            if (pane != window.panes.last()) {
-                commands.addCommand(buildSplitCommand(settings))
-            }
         }
+        commands.addCommand(buildKillInitialPaneCommand(settings))
         if (window.layout != "") {
             commands.addCommand(buildLayoutCommand(settings, window.layout))
         }

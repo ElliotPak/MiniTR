@@ -96,6 +96,15 @@ fun buildAttachCommand(settings: Settings): List<String> {
     return command
 }
 
+fun buildDefaultDirCommand(settings: Settings): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("attach")
+    command.add("-c")
+    command.add("${settings.root}")
+    return command
+}
+
 fun buildNewWindowCommand(settings: Settings, window: Window): List<String> {
     val command: MutableList<String> = mutableListOf()
     command.add("${settings.tmuxCommand}")
@@ -117,6 +126,33 @@ fun buildSplitCommand(settings: Settings): List<String> {
     val command: MutableList<String> = mutableListOf()
     command.add("${settings.tmuxCommand}")
     command.add("split-window")
+    return command
+}
+
+fun buildKillInitialPaneCommand(settings: Settings): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("kill-pane")
+    command.add("-t")
+    command.add("0")
+    return command
+}
+
+fun buildKillOtherWindowsCommand(settings: Settings, windowId: String): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("kill-window")
+    command.add("-a")
+    command.add("-t")
+    command.add(windowId)
+    return command
+}
+
+fun buildReorderWindowsCommand(settings: Settings): List<String> {
+    val command: MutableList<String> = mutableListOf()
+    command.add("${settings.tmuxCommand}")
+    command.add("move-window")
+    command.add("-r")
     return command
 }
 
