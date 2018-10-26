@@ -32,15 +32,24 @@ fun doesFileExist(filename: String): Boolean {
  * Creates a string for a basic project file.
  */
 fun createProjectSkeleton(projectName: String, projectPath: String): String {
-    return """[settings]
-name = $projectName
-root = $projectPath
-tmux-command = tmux
-tmux-flags = 
-start-window = default
-
-[window/default]
-panes = ""
+    return """ {
+    "settings": {
+        "name": "minitr",
+        "root": "~/projects/minitr",
+        "tmuxCommand": "tmux",
+        "tmuxFlags": "",
+        "startWindow": "window"
+    },
+    "commands": {
+    },
+    "windows": [
+        {
+            "name": "window",
+            "layout": "main-vertical",
+            "panes": [ ]
+        }
+    ]
+}
 """
 }
 

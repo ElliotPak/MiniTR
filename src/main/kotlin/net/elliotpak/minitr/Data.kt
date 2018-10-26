@@ -16,21 +16,23 @@ data class Settings(var name: String, var root: String,
 /**
  * Contains the commands executed at various points of a minitr project.
  */
-data class Commands(var start: Array<String>, var attach: Array<String>,
-                    var detatch: Array<String>, var stop: Array<String>,
-                    var preWindow: Array<String>)
+data class Commands(var start: Array<String> = arrayOf(),
+                    var attach: Array<String> = arrayOf(),
+                    var detatch: Array<String> = arrayOf(),
+                    var stop: Array<String> = arrayOf(),
+                    var preWindow: Array<String> = arrayOf())
 
 /**
  * Contains information about a tmux window
  */
-data class Window(var name: String, var layout: String,
+data class Window(var name: String, var layout: String = "",
                   var panes: Array<Pane>)
 
 /**
  * Contains information about a tmux pane
  */
 
-data class Pane(var dir: String, var commands: Array<String>)
+data class Pane(var dir: String = "", var commands: Array<String>)
 
 /**
  * Contains all information about a minitr project
