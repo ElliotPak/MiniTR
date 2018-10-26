@@ -22,6 +22,7 @@ jar {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 test {
@@ -51,6 +52,7 @@ task uninstall(type:Delete) {
 }
 
 dependencies {
+    implementation 'com.beust:klaxon:3.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-runtime"
     testCompile 'junit:junit:4.12'

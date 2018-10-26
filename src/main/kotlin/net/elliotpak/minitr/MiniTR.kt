@@ -31,9 +31,11 @@ fun executeProjectAction(projectStr: String, action: String) {
         optionsStart.put("debug", ::projectDebug)
         val cont = getFileContents(projectStr)
         val project = parseProjectFile(cont)
-        val actionFunc = optionsStart.get(action)
-        if (actionFunc != null) {
-            actionFunc(project)
+        if (project != null) {
+            val actionFunc = optionsStart.get(action)
+            if (actionFunc != null) {
+                actionFunc(project)
+            }
         }
     }
 }
@@ -77,7 +79,9 @@ fun setupMinitrProject(project: Project, commands: CommandManager): Unit {
             commands.addCommand(buildNewWindowCommand(settings, window))
         }
         for (pane in window.panes) {
-            commands.addCommand(buildExecuteCommand(settings, pane))
+            for (command in pane.commands) {
+                commands.addCommand(buildExecuteCommand(settings, command))
+            }
             if (pane != window.panes.last()) {
                 commands.addCommand(buildSplitCommand(settings))
             }
