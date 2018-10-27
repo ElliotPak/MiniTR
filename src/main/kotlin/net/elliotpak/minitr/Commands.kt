@@ -89,7 +89,6 @@ fun String.getCommandArray(): List<String> {
 fun sanitisePath(tilded: String): String {
     val stage1 = tilded.replace(Regex("^~"), System.getProperty("user.home"))
     val stage2 = stage1.replace(Regex("^\\."), System.getProperty("user.dir"))
-    println(stage2)
     return stage2
 }
 
