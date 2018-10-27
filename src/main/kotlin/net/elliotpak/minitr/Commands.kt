@@ -169,10 +169,19 @@ fun buildLayoutCommand(settings: Settings, layout: String): List<String> {
     return command
 }
 
-fun buildExecuteCommand(settings: Settings, toExecute: String): List<String> {
+fun buildExecuteCommand(settings: Settings, toExecute: Array<String>): List<String> {
     val command: MutableList<String> = mutableListOf()
     command.add("${settings.tmuxCommand}")
     command.add("send-keys")
-    command.add("$toExecute\n")
+    var commandString = ""
+    for (line in toExecute) {
+        if (line == toExecute.last()) {
+            commandString += "$line\n"
+        }
+        else {
+            commandString += "$line;"
+        }
+    }
+    command.add(commandString)
     return command
 }
