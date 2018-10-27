@@ -76,7 +76,8 @@ fun String.getCommandArray(): List<String> {
 }
 
 /**
- * Replaces the tilde in front of a string with the user's home.
+ * Replaces the tilde in front of a string with the user's home, among other
+ * path fixes (like using .).
  *
  * Fun fact: this took me like 2 months to solve. At the time of writing this,
  * I just solved it, and I'm so gosh darn mad it took me this long you have no
@@ -85,8 +86,11 @@ fun String.getCommandArray(): List<String> {
  * Note to future Elliot: Never use a tilde anywhere outside of bash, and even
  * then, don't do it. I'll be VERY sad.
  */
-fun replaceTilde(tilded: String): String {
-    return tilded.replace(Regex("^~"), System.getProperty("user.home"))
+fun sanitisePath(tilded: String): String {
+    val stage1 = tilded.replace(Regex("^~"), System.getProperty("user.home"))
+    val stage2 = stage1.replace(Regex("^\\."), System.getProperty("user.dir"))
+    println(stage2)
+    return stage2
 }
 
 fun buildStartCommand(settings: Settings): List<String> {
@@ -95,7 +99,7 @@ fun buildStartCommand(settings: Settings): List<String> {
     command.add("new-session")
     command.add("-d")
     command.add("-c")
-    command.add("${replaceTilde(settings.root)}")
+    command.add("${sanitisePath(settings.root)}")
     command.add("-s")
     command.add("${settings.name}")
     return command
@@ -127,10 +131,12 @@ fun buildWindowRenameCommand(settings: Settings, window: Window): List<String> {
     return command
 }
 
-fun buildSplitCommand(settings: Settings): List<String> {
+fun buildSplitCommand(settings: Settings, pane: Pane): List<String> {
     val command: MutableList<String> = mutableListOf()
     command.add("${settings.tmuxCommand}")
     command.add("split-window")
+    command.add("-c")
+    command.add(sanitisePath(pane.dir))
     return command
 }
 

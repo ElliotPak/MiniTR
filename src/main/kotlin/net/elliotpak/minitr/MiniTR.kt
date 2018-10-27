@@ -79,7 +79,7 @@ fun setupMinitrProject(project: Project, commands: CommandManager): Unit {
             commands.addCommand(buildReorderWindowsCommand(settings))
         }
         for (pane in window.panes) {
-            commands.addCommand(buildSplitCommand(settings))
+            commands.addCommand(buildSplitCommand(settings, pane))
             commands.addCommand(buildExecuteCommand(settings, pane.commands))
         }
         commands.addCommand(buildKillInitialPaneCommand(settings))

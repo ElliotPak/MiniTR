@@ -68,5 +68,14 @@ fun saveFile(filename: String, contents: String) {
  */
 
 fun parseProjectFile(contents: String): Project? {
-    return Klaxon().parse<Project>(contents)
+    val proj = Klaxon().parse<Project>(contents)
+    if (proj != null) {
+        proj.settings.root = sanitisePath(proj.settings.root)
+        for (window in proj.windows) {
+            for (pane in window.panes) {
+                pane.dir = "${proj.settings.root}/${sanitisePath(pane.dir)}"
+            }
+        }
+    }
+    return proj
 }
